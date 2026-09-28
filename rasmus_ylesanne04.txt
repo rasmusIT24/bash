@@ -1,0 +1,5 @@
+Rasmus Ojala 08.09.2026
+sudo apt update && sudo apt install -y man-db manpages
+sudo apt update && sudo apt install tree -y
+sudo apt-get upgrade
+sudo apt-get update
