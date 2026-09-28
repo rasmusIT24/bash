@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "Nimi: Rasmus"
+echo "Kursus: IT"

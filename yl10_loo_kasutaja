@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Küsitakse kasutajalt uue konto nime ja salvestatakse see muutujasse 'kasutajanimi'
+read -p "Sisesta uue kasutaja nimi: " kasutajanimi
+
+# Küsitakse parooli. Lipp '-s' peidab trükkimise ajal tähemärgid ekraanilt, et tagada turvalisus
+read -sp "Sisesta kasutaja parool: " parool
+echo "" # Prindib tühja rea, et järgmine terminali tekst ei algaks paroolirealt
+
+# Luuakse uus kasutaja süsteemi koos kodukataloogiga (-m) ja määratakse talle vaikimisi Bash kest (-s)
+useradd -m -s /bin/bash "$kasutajanimi"
+
+# Määratakse vastloodud kasutajale sisestatud parool, edastades selle chpasswd käsule
+echo "$kasutajanimi:$parool" | chpasswd
+
+# Luuakse uue kasutaja kodukataloogi sisse kaust nimega 'kataloog' (Lipp -p tagab, et viga ei teki, kui see on olemas)
+mkdir -p "/home/$kasutajanimi/kataloog"
+
+# Luuakse tekstifail 'teretulemast_kasutajanimi.txt ja kirjutatakse sinna tervitustekst
+echo "Tere tulemast süsteemi, $kasutajanimi!" > "/home/$kasutajanimi/kataloog/teretulemust_$kasutajanimi.txt"
+
+# Muudetakse Loodud kataloogi ja faili omanikuks uus kasutaja, et tal oleks neile täisligipääs
+chown -R "$kasutajanimi:$kasutajanimi" "/home/$kasutajanimi/kataloog
+
+# Väljastatakse ekraanile teade edukalt Lõpetatud toimingu kohta
+echo "Kasutaja $kasutajanimi ja tervitusfail on edukalt loodud!"

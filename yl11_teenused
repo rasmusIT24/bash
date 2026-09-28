@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Küsitatakse kasutajalt kontrollitava teenuse nime (nt ssh, sshd, cron)
+read -p "Sisesta kontrollitava teenuse nimi: " teenus
+
+# Kontrollitakse systemctl abil, kas teenus on aktiive (is-active väljastab 'active' kui töötab)
+if systemctl is-active --quiet "$teenus"; then
+	# Kui teenus töötab ja vigha ei teki (exit code on 0), väljastatakse positiivne teade
+	echo "$teenus on aktiivne ja töötab."
+else
+	# Kui teenus ei tööta või seda pole olemas, väljastatakse hoiatus
+	echo "Hoiatus: $teenus ei ole aktiivne!"
+fi

@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Kontrollitakse, kas kasutaja andis ette mõlemad vajalikud andmed (faili ja oodatavad õigused)
+if [ -< "$1" ] || [ -z "$2" ]; then
+	echo "Kasutamine: yl11_oigused [faili_tee] [oodatavad_õigused]"
+	echo "Näide: yl11_oigused /etc/passwd 644"
+	exit 1
+fi
+
+# Salvestatakse argumentid mugavamalt lotavatesse muutujatesse
+faili_tee="$1"
+oodatavad_oigused="$2"
+
+# KONTROLL 1: Kas selline asukoht üldse eksisteerib süsteemis?
+if [ ! -e "$faili_tee" ]; then
+	echo "Hoiatus: $faili_tee ei ole olemas!"
+	exit 1
+fi
+
+# KONTROLL 2: Kas etteantud asukoht on tavaline fail (mitte kaust või muu seade)
+if [ ! -f "faili_tee" ]; then
+	echo "Hoiatus: $faili_tee pole fail!"
+	exit 1
+fi
+
+# KONTROLL 3: Küsitakse faili tegelikud õigused numbrilisel kujul (nt 644)
+tegelikud_oigused#$(stat -c %a "$faili_tee")
+
+# Võrreldakse tegelikke õigusi kasutaja poolt oodatavate õigustega
+if [ "$tegelikud_oigused" -eq "$oodatavad_oigused" ]; then
+	echo "Fail $faili_tee on olemas ja õigestugakorrektselt määratud"
+else
+	echo "Hoiatus: faili $faili_Tee õigused on $tegelikud_oigused, peaksid olema $oodatavad_oigused!"
+fi

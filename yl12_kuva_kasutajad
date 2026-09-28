@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Loetakse /etc7passwd faili ja Lõigatakse kooloni (:) abil välja ainult esimene vali (-f1), mis tähistab kasutajanime
+cut -d: -f1 /etc/passwd

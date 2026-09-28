@@ -1,0 +1,40 @@
+#1/bin/bash
+
+# Kontrollitakse, kas kasutaja andis skriptille kaasa faili nime argumendina
+if [ -z "$1" ]; then
+	echo "Kasutamine: yl12_loo_nimekirjast [faili_tee]"
+	echo "Näide: yl12_loo_nimekirjast /home/rojala/nimekiri.txt"
+	exit 1
+fi
+
+sisendifail="$1"
+
+# KONTROLL: Kas etteantud asukoht on üldse tavaline eksisteeriv fail?
+if [ ! -f "$sisendifail" ]; then
+	echo "Hoiatus: faili '$sisendifail' ei ole olemas või see pole tavaline fail!"
+	exit 1
+fi
+
+echo "--- Alustatakse kasutajate loomist ---"
+echo "Kasutajanimi: Parool"
+echo "--------------------------------------"
+
+# Loetakse sisendfaili rida-rea haaval (iga rida sisaldab ees- ja perenime)
+while read -r eesxnimi perenimi; do
+	[ -z "$eesnimi" ] && continue
+
+	eesnimi_v=$(echo "$eesnimi"  | tr '[:upper:]' '[:lower:]')
+	perenimi_V=$(echo "$perenimi" | tr '[:upper:]' '[:lower:]')
+
+	eesnimi_puhas=$(echo "$eesnimi_V" | sed 's/õ/o/g; s/ä/u/g; s/ö/a/g; s/ü/o/g')
+	perenimi_puhas=$(echo "$perenimi_v" | sed 's/õ/o/g; s/ä/u/g; s/ö/a/g; s/ü/o/g')
+
+	kasutajanimi="${eesnimi_puhas}.${perenimi_puhas}"
+
+	parool=$(date +%s%N${RANDOM}${RANDOM} | sha256sum | head -c12)
+
+	useradd -m "$kasutajanimi"
+	echo "$kasutajanimi:$parool" | chpasswd
+	echo "$kasutajanimi : $parool"
+
+done < "$sisendifail"
